@@ -23,9 +23,6 @@ class Task():
         self.action_high = 900
         self.action_size = 4
 
-        # starting position 
-        self.init_pose = init_pose if init_pose is not None else np.array([0.,0.,0.,0.,0.,0.])
-
         # Goal
         self.target_pos = target_pos if target_pos is not None else np.array([0., 0., 10.]) 
         
