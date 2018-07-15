@@ -29,7 +29,10 @@ class Task():
 
     def get_reward(self):
 
-        reward = np.tanh(self.sim.v[2] * abs( self.target_pos[2]-self.sim.pose[2]) )
+        reward_positive_velocity = np.tanh(self.sim.v[2] * abs( self.target_pos[2]-self.sim.pose[2]) )
+        reward_constant_xy= np.tanh((abs( self.target_pos[:2]-self.sim.pose[:2])).sum())
+        reward=0.8*reward_positive_velocity+0.2*reward_constant_xy
+        #reward=reward_positive_velocity
         return reward 
 
     def step(self, rotor_speeds):
@@ -40,7 +43,6 @@ class Task():
             done = self.sim.next_timestep(rotor_speeds) # update the sim pose and velocities
             reward += self.get_reward() 
             pose_all.append(self.sim.pose)
-            self.prev_pos=self.sim.pose
         next_state = np.concatenate(pose_all)
         return next_state, reward, done
 
