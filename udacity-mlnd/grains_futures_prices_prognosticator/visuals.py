@@ -11,27 +11,12 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import cufflinks as cf
+import plotly.tools as tls
+
 import pandas as pd
 import numpy as np
-
-def plot_numerical_series(data):
-	'''
-	The code below 
-	plots each series as a separate subplot.
-	'''
-
-	values = data.values
-	# specify columns to plot
-	groups = [0, 1, 2, 3,4 ]
-	i = 1
-	# plot each column
-	plt.figure()
-	for group in groups:
-		plt.subplot(len(groups), 1, i)
-		plt.plot(values[:, group])
-		plt.title(data.columns[group], y=0.5, loc='right')
-		i += 1
-	plt.show()
 
 def plot_lstm_prediction(actual, prediction, title='Google Trading vs Prediction', y_label='Price USD', x_label='Trading Days'):
     """
@@ -58,6 +43,67 @@ def plot_lstm_prediction(actual, prediction, title='Google Trading vs Prediction
     # Set title
     ax.set_title(title)
     ax.legend(loc='upper left')
-
-
     plt.show()
+
+def plot_original_price_series(df_fut_orig):
+    """
+    Plots Original Corn Futures Price Series using Plotly
+    """
+
+    fig = tls.make_subplots(rows=5, cols=1, shared_xaxes=True,print_grid=False, specs=[[{'rowspan': 4}],[None],[None],[None],[{}]]   )
+
+    for col in ['Settle']:
+        fig.append_trace({'x': df_fut_orig.index, 'y': df_fut_orig[col], 'type': 'scatter', 'name': col}, 1, 1)
+    for col in ['Volume' ]:
+        fig.append_trace({'x': df_fut_orig.index, 'y': df_fut_orig[col], 'type': 'bar', 'name': col}, 5, 1)
+        
+    fig['layout']['xaxis'].update(title='Date')
+    fig['layout']['yaxis1'].update(title='Settling Price (Cents) ')
+    fig['layout']['yaxis2'].update(title='Volume')
+    cf.iplot(fig)
+
+
+
+def plot_weekly_combined_series_by_date(df_weekly):
+    """
+    Plots weekly combined series (price series and cot report) using Plotly
+    """
+
+    fig = tls.make_subplots(rows=5, cols=1, shared_xaxes=True,print_grid=False,
+                       specs=[[{'rowspan': 2}],[None],[{'rowspan': 2}],[None],[{}]]   )
+
+    for col in ['Settle']:
+        fig.append_trace({'x': df_weekly['Date'], 'y': df_weekly[col], 'type': 'scatter', 'name': col}, 1, 1)
+    for col in ['Open_Interest','Longs','Shorts']:
+        fig.append_trace({'x': df_weekly['Date'], 'y': df_weekly[col], 'type': 'scatter', 'name': col}, 3, 1)
+        
+    for col in ['Volume' ]:
+        fig.append_trace({'x': df_weekly['Date'], 'y': df_weekly[col], 'type': 'bar', 'name': col}, 5, 1)
+        
+    fig['layout']['xaxis'].update(title='Date')
+    fig['layout']['yaxis1'].update(title='Price (Cents)')
+    fig['layout']['yaxis2'].update(title='Open Interest')
+    fig['layout']['yaxis3'].update(title='Volume')
+    cf.iplot(fig)
+
+def plot_weekly_combined_series_by_trading_week(df_weekly):
+    """
+    Plots weekly combined series (price series and cot report) using Plotly. Use trading weeks on X axis
+    """
+
+    fig = tls.make_subplots(rows=5, cols=1, shared_xaxes=True,print_grid=False,
+                       specs=[[{'rowspan': 2}],[None],[{'rowspan': 2}],[None],[{}]]   )
+
+    for col in ['Settle']:
+        fig.append_trace({'x': df_weekly.index, 'y': df_weekly[col], 'type': 'scatter', 'name': col}, 1, 1)
+    for col in ['Open_Interest','Longs','Shorts']:
+        fig.append_trace({'x': df_weekly.index, 'y': df_weekly[col], 'type': 'scatter', 'name': col}, 3, 1)
+        
+    for col in ['Volume' ]:
+        fig.append_trace({'x': df_weekly.index, 'y': df_weekly[col], 'type': 'bar', 'name': col}, 5, 1)
+        
+    fig['layout']['xaxis'].update(title='Trading Week')
+    fig['layout']['yaxis1'].update(title='Price (Cents)')
+    fig['layout']['yaxis2'].update(title='Open Interest')
+    fig['layout']['yaxis3'].update(title='Volume')
+    cf.iplot(fig)
