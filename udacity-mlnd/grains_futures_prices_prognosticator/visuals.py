@@ -18,32 +18,6 @@ import plotly.tools as tls
 import pandas as pd
 import numpy as np
 
-def plot_lstm_prediction(actual, prediction, title='Google Trading vs Prediction', y_label='Price USD', x_label='Trading Days'):
-    """
-    Plots train, test and prediction
-    :param actual: DataFrame containing actual data
-    :param prediction: DataFrame containing predicted values
-    :param title:  Title of the plot
-    :param y_label: yLabel of the plot
-    :param x_label: xLabel of the plot
-    :return: prints a Pyplot againts items and their closing value
-    """
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-
-    # Add labels
-    plt.ylabel(y_label)
-    plt.xlabel(x_label)
-
-    # Plot actual and predicted close values
-
-    plt.plot(actual, '#00FF00', label='Adjusted Close')
-    plt.plot(prediction, '#0000FF', label='Predicted Close')
-
-    # Set title
-    ax.set_title(title)
-    ax.legend(loc='upper left')
-    plt.show()
 
 def plot_original_price_series(df_fut_orig):
     """
@@ -107,3 +81,23 @@ def plot_weekly_combined_series_by_trading_week(df_weekly):
     fig['layout']['yaxis2'].update(title='Open Interest')
     fig['layout']['yaxis3'].update(title='Volume')
     cf.iplot(fig)
+
+
+def plot_series_to_compare(series1, series2, series1_name, series2_name,title):
+    """
+    Plots Two series for easy comparison
+    """
+
+    fig = tls.make_subplots(rows=1, cols=1, shared_xaxes=True,print_grid=False  )
+    fig['layout'].update(height=400, width=899, title=title)
+
+    x_series=np.arange(0,len(series1))
+
+    fig.append_trace({'x': x_series, 'y': series1, 'type': 'scatter', 'name': series1_name}, 1, 1)
+    fig.append_trace({'x': x_series, 'y': series2, 'type': 'scatter', 'name': series2_name}, 1, 1)
+
+        
+    fig['layout']['xaxis'].update(title='Trading Week')
+    fig['layout']['yaxis'].update(title='Price (Cents)')
+    cf.iplot(fig)
+  
