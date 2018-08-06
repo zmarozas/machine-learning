@@ -97,22 +97,26 @@ def plot_series_to_compare(series1, series2, series1_name, series2_name,title):
     fig['layout']['yaxis'].update(title='Price (Cents)')
     cf.iplot(fig)
 
-def plot_grouped_by_year_data(df_weekly):
+def plot_grouped_by_year_data(df_weekly,title):
     """
     Plots weekly combined series (price series and cot report) using Plotly. Use trading weeks on X axis
     """
     x_series=np.arange(0,54)
     groups = df_weekly['Settle'].groupby(Grouper(freq='A'))
     fig = tls.make_subplots(rows=len(groups), cols=1, shared_xaxes=True,print_grid=False )
+    fig['layout'].update(height=600, width=899, title=title)
     for i,(name, group) in enumerate(groups):
         lst = map(lambda x: x, group.values)
         ser = pd.Series(lst)
-        fig.append_trace({'x': x_series, 'y':  ser, 'type': 'scatter', 'name': name.year}, i+1, 1)
+        # chart only data where we have full year (52 weeks)
+        if len(ser) >= 52:
+            fig.append_trace({'x': x_series, 'y':  ser, 'type': 'scatter', 'name': name.year}, i+1, 1)
+            fig['layout']['yaxis'+str((i+1))].update(showticklabels=False)
 
-    fig['layout']['xaxis'].update(title='Trading Week')
-    fig['layout']['yaxis'].update(title='Price (Cents)')
-    #fig['layout']['yaxis'].update(showticklabels=False)
-    fig['layout']['yaxis'].update(ticks='')
+    #fig['layout']['xaxis'].update(title='Trading Week')
+    #fig['layout']['yaxis'].update(title='Price (Cents)')
+    fig['layout']['xaxis'].update(showticklabels=False)
+    #fig['layout']['yaxis'].update(ticks='')
     cf.iplot(fig)
     
 
