@@ -103,21 +103,35 @@ def plot_grouped_by_year_data(df_weekly,title):
     """
     x_series=np.arange(0,54)
     groups = df_weekly['Settle'].groupby(Grouper(freq='A'))
-    fig = tls.make_subplots(rows=len(groups), cols=1, shared_xaxes=True,print_grid=False )
+    fig = tls.make_subplots(rows=sum(1 for (name,grp)  in groups if len(grp.values)>=52), cols=1, shared_xaxes=True,print_grid=False )
     fig['layout'].update(height=600, width=899, title=title)
-    for i,(name, group) in enumerate(groups):
-        lst = map(lambda x: x, group.values)
-        ser = pd.Series(lst)
+    for i,(name, group) in enumerate([ (name,grp) for (name,grp)  in groups if len(grp.values)>=52]):
         # chart only data where we have full year (52 weeks)
-        if len(ser) >= 52:
-            fig.append_trace({'x': x_series, 'y':  ser, 'type': 'scatter', 'name': name.year}, i+1, 1)
+        if len(group.values) >= 52:
+            fig.append_trace({'x': x_series, 'y':  group.values, 'type': 'scatter', 'name': name.year}, i+1, 1)
             fig['layout']['yaxis'+str((i+1))].update(showticklabels=False)
 
-    #fig['layout']['xaxis'].update(title='Trading Week')
-    #fig['layout']['yaxis'].update(title='Price (Cents)')
-    fig['layout']['xaxis'].update(showticklabels=False)
-    #fig['layout']['yaxis'].update(ticks='')
     cf.iplot(fig)
+
+
+def lag_plot(df_weekly,title):
+    values = pd.DataFrame(df_weekly['Settle'].values)
+    lags = 7
+    columns = [values]
+    for i in range(1,(lags + 1)):
+        columns.append(values.shift(i))
+    dataframe = pd.concat(columns, axis=1)
+    columns = ['t']
+    for i in range(1,(lags + 1)):
+        columns.append('t-' + str(i))
+    dataframe.columns = columns
+    fig=plt.figure(figsize=(10,12))
+    fig.suptitle(title, fontsize=14)
+    for i in range(1,(lags + 1)):
+        ax = plt.subplot(240 + i)
+        ax.set_title('t vs t-' + str(i))
+        plt.scatter(x=dataframe['t'].values, y=dataframe['t-'+str(i)].values)
+    #plt.show()
     
 
     
