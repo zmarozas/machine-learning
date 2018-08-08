@@ -31,3 +31,20 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
         agg.dropna(inplace=True)
     return agg
 
+
+def split_data(reframed_df,validation_start,testing_start):
+    reframed=reframed_df.copy()
+    values=	reframed.values
+    train = values[:validation_start, :]
+    validation = values[validation_start:testing_start, :]
+    test = values[testing_start:, :]
+    # split into input and outputs
+    train_X, train_y = train[:, :-1], train[:, -1]
+    validation_X, validation_y = validation[:, :-1], validation[:, -1]
+    test_X, test_y = test[:, :-1], test[:, -1]
+    # reshape input to be 3D [samples, timesteps, features]
+    train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
+    validation_X = validation_X.reshape((validation_X.shape[0], 1, validation_X.shape[1]))
+    test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
+    #print(train_X.shape, train_y.shape, validation_X.shape, validation_y.shape,test_X.shape, test_y.shape)   
+    return  train_X, train_y, validation_X, validation_y,test_X, test_y
