@@ -14,7 +14,7 @@ def fit_memmory_cells_model(n_cells,train_X,train_y,validation_X,validation_y):
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 
@@ -42,11 +42,11 @@ def tune_memmory_cells(train_X,train_y,validation_X,validation_y):
 
 def fit_batch_size_model(n_batch,train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LSTM(25, input_shape=(train_X.shape[1], train_X.shape[2])))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    model.fit(train_X, train_y, epochs=150, batch_size=n_batch, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=n_batch, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 
@@ -74,13 +74,13 @@ def tune_batch_size(train_X,train_y,validation_X,validation_y):
 
 def fit_learning_rate_model(n_rate,train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LSTM(25, input_shape=(train_X.shape[1], train_X.shape[2])))
     model.add(Dense(1))
     optimizer = optimizers.Adam(lr=n_rate)
 
     model.compile(optimizer=optimizer,loss='mae')
     # fit network
-    model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=128, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 
@@ -108,13 +108,13 @@ def tune_learning_rate(train_X,train_y,validation_X,validation_y):
 
 def fit_weight_regularization_model(reg,train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2]),bias_regularizer=reg))
+    model.add(LSTM(25, input_shape=(train_X.shape[1], train_X.shape[2]),kernel_regularizer=reg))
     model.add(Dense(1))
     optimizer = optimizers.Adam(lr=0.001)
 
     model.compile(optimizer=optimizer,loss='mae')
     # fit network
-    model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=128, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 

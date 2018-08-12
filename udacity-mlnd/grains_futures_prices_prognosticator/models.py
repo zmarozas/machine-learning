@@ -45,18 +45,16 @@ def basic_lstm_model(train_X,train_y,validation_X,validation_y):
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    history = model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
+    history = model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
     return model,history.history
 
 
-def improoved_lstm_model(train_X,train_y,validation_X,validation_y):
+def improved_lstm_model(train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    reg = L1L2(l1=0.0, l2=0.0)
+    reg = L1L2(l1=0.0, l2=0.01)
     model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2]),bias_regularizer=reg))
     model.add(Dense(1))
-    optimizer = optimizers.Adam(lr=0.001)
-
-    model.compile(optimizer=optimizer,loss='mae')
+    model.compile(loss='mae', optimizer='adam')
     # fit network
-    history=model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
+    history=model.fit(train_X, train_y, epochs=500, batch_size=128, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
     return model,history.history
