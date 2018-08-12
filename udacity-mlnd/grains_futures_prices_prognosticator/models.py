@@ -1,6 +1,8 @@
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras import  optimizers
+from keras.regularizers import L1L2
 from numpy import concatenate
 from math import sqrt
 from sklearn.metrics import mean_squared_error
@@ -49,9 +51,12 @@ def basic_lstm_model(train_X,train_y,validation_X,validation_y):
 
 def improoved_lstm_model(train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    model.add(LSTM(10, input_shape=(train_X.shape[1], train_X.shape[2])))
+    reg = L1L2(l1=0.0, l2=0.0)
+    model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2]),bias_regularizer=reg))
     model.add(Dense(1))
-    model.compile(loss='mae', optimizer='adam')
+    optimizer = optimizers.Adam(lr=0.001)
+
+    model.compile(optimizer=optimizer,loss='mae')
     # fit network
-    history = model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
+    history=model.fit(train_X, train_y, epochs=150, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
     return model,history.history
