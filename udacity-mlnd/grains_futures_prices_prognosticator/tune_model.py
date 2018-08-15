@@ -14,7 +14,7 @@ def fit_memmory_cells_model(n_cells,train_X,train_y,validation_X,validation_y):
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=64, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 
@@ -80,7 +80,7 @@ def fit_learning_rate_model(n_rate,train_X,train_y,validation_X,validation_y):
 
     model.compile(optimizer=optimizer,loss='mae')
     # fit network
-    model.fit(train_X, train_y, epochs=500, batch_size=128, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 
@@ -114,13 +114,13 @@ def fit_weight_regularization_model(reg,train_X,train_y,validation_X,validation_
 
     model.compile(optimizer=optimizer,loss='mae')
     # fit network
-    model.fit(train_X, train_y, epochs=500, batch_size=128, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
+    model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
     return loss
 
 def tune_weight_regularization(train_X,train_y,validation_X,validation_y):
     # define scope of search
-    regularizers = {1:L1L2(l1=0.0, l2=0.0), 2:L1L2(l1=0.01, l2=0.0), 3:L1L2(l1=0.0, l2=0.01), 4:L1L2(l1=0.01, l2=0.01)}
+    regularizers = {1:L1L2(l1=0.0, l2=0.01), 2:L1L2(l1=0.01, l2=0.0), 3:L1L2(l1=0.0, l2=0.0), 4:L1L2(l1=0.01, l2=0.01)}
     n_repeats = 5
     # grid search parameter values
     scores = DataFrame()

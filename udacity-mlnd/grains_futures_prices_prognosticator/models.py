@@ -45,7 +45,7 @@ def basic_lstm_model(train_X,train_y,validation_X,validation_y):
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    history = model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
+    history = model.fit(train_X, train_y, epochs=500, batch_size=64, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
     return model,history.history
 
 
@@ -56,5 +56,5 @@ def improved_lstm_model(train_X,train_y,validation_X,validation_y):
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    history=model.fit(train_X, train_y, epochs=500, batch_size=128, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
+    history=model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=2, shuffle=False)
     return model,history.history
