@@ -108,11 +108,9 @@ def tune_learning_rate(train_X,train_y,validation_X,validation_y):
 
 def fit_weight_regularization_model(reg,train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    model.add(LSTM(25, input_shape=(train_X.shape[1], train_X.shape[2]),kernel_regularizer=reg))
+    model.add(LSTM(25, input_shape=(train_X.shape[1], train_X.shape[2]),bias_regularizer=reg))
     model.add(Dense(1))
-    optimizer = optimizers.Adam(lr=0.001)
-
-    model.compile(optimizer=optimizer,loss='mae')
+    model.compile(loss='mae', optimizer='adam')
     # fit network
     model.fit(train_X, train_y, epochs=500, batch_size=32, validation_data=(validation_X, validation_y), verbose=0, shuffle=False)
     loss= model.evaluate(validation_X, validation_y, verbose=0)
