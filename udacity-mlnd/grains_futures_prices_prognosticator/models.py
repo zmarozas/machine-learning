@@ -41,7 +41,7 @@ def make_lstm_prediction(x_data,y_data,model,scaler):
 
 def basic_lstm_model(train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    model.add(LSTM(1, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LSTM(5, input_shape=(train_X.shape[1], train_X.shape[2])))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
@@ -51,9 +51,7 @@ def basic_lstm_model(train_X,train_y,validation_X,validation_y):
 
 def improved_lstm_model(train_X,train_y,validation_X,validation_y):
     model = Sequential()
-    #reg = L1L2(l1=0.0, l2=0.01)
-    #model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2]),bias_regularizer=reg))
-    model.add(LSTM(25, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LSTM(75, input_shape=(train_X.shape[1], train_X.shape[2])))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
